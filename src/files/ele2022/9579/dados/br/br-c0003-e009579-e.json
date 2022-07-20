@@ -1,0 +1,111 @@
+{
+    "ele": 9579,
+    "cdabr": "BR",
+    "nmabr": "BRASIL",
+    "t": 1,
+    "f": "S",
+    "cdcar": 3,
+    "nmcar": "Governador",
+    "dg": "08/07/2022",
+    "hg": "13:49:51",
+    "abr": [
+        {
+            "tpabr": "UF",
+            "cdabr": "DF",
+            "nmabr": "DISTRITO FEDERAL",
+            "dt": "",
+            "ht": "",
+            "scv": "N",
+            "tvap": 1083966,
+            "cand": [
+                {
+                    "seq": 0,
+                    "sqcand": 70007787153,
+                    "n": 15,
+                    "nm": "CANDIDATO 15",
+                    "nmu": "CANDIDATO 15",
+                    "vap": 192240,
+                    "sgp": "P15",
+                    "com": "",
+                    "vs": [
+                        {
+                            "sqcand": 70007787154,
+                            "nm": "CANDIDATO 15 1",
+                            "nmu": "CANDIDATO 15 1",
+                            "tp": "V",
+                            "sgp": "P15"
+                        }
+                    ]
+                },
+                {
+                    "seq": 0,
+                    "sqcand": 70007787127,
+                    "n": 16,
+                    "nm": "CANDIDATO 16",
+                    "nmu": "CANDIDATO 16",
+                    "vap": 189917,
+                    "sgp": "P16",
+                    "com": "",
+                    "vs": [
+                        {
+                            "sqcand": 70007787128,
+                            "nm": "CANDIDATO 16 1",
+                            "nmu": "CANDIDATO 16 1",
+                            "tp": "V",
+                            "sgp": "P16"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "tpabr": "UF",
+            "cdabr": "RN",
+            "nmabr": "RIO GRANDE DO NORTE",
+            "dt": "",
+            "ht": "",
+            "scv": "N",
+            "tvap": 380413,
+            "cand": [
+                {
+                    "seq": 0,
+                    "sqcand": 200007779956,
+                    "n": 13,
+                    "nm": "CANDIDATO 13",
+                    "nmu": "CANDIDATO 13",
+                    "vap": 65854,
+                    "sgp": "P13",
+                    "com": "",
+                    "vs": [
+                        {
+                            "sqcand": 200007779957,
+                            "nm": "CANDIDATO 13 1",
+                            "nmu": "CANDIDATO 13 1",
+                            "tp": "V",
+                            "sgp": "P13"
+                        }
+                    ]
+                },
+                {
+                    "seq": 0,
+                    "sqcand": 200007779559,
+                    "n": 11,
+                    "nm": "CANDIDATO 11",
+                    "nmu": "CANDIDATO 11",
+                    "vap": 64588,
+                    "sgp": "P11",
+                    "com": "",
+                    "vs": [
+                        {
+                            "sqcand": 200007779560,
+                            "nm": "CANDIDATO 11 1",
+                            "nmu": "CANDIDATO 11 1",
+                            "tp": "V",
+                            "sgp": "P11"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

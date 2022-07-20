@@ -1,0 +1,114 @@
+{
+    "ele": 9579,
+    "cdabr": "BR",
+    "nmabr": "BRASIL",
+    "t": 1,
+    "f": "S",
+    "cdcar": 6,
+    "nmcar": "Deputado Federal",
+    "dg": "08/07/2022",
+    "hg": "13:49:51",
+    "abr": [
+        {
+            "tpabr": "UF",
+            "cdabr": "DF",
+            "nmabr": "DISTRITO FEDERAL",
+            "dt": "",
+            "ht": "",
+            "scv": "N",
+            "tvap": 1683528,
+            "cand": []
+        },
+        {
+            "tpabr": "UF",
+            "cdabr": "RN",
+            "nmabr": "RIO GRANDE DO NORTE",
+            "dt": "",
+            "ht": "",
+            "scv": "N",
+            "tvap": 2011729,
+            "cand": [
+                {
+                    "seq": 0,
+                    "sqcand": 200007780939,
+                    "n": 6600,
+                    "nm": "CANDIDATO 6600",
+                    "nmu": "CANDIDATO 6600",
+                    "vap": 34751,
+                    "sgp": "P66",
+                    "com": ""
+                },
+                {
+                    "seq": 0,
+                    "sqcand": 200007780949,
+                    "n": 2414,
+                    "nm": "CANDIDATO 2414",
+                    "nmu": "CANDIDATO 2414",
+                    "vap": 32491,
+                    "sgp": "P24",
+                    "com": ""
+                },
+                {
+                    "seq": 0,
+                    "sqcand": 200007780047,
+                    "n": 9103,
+                    "nm": "CANDIDATO 9103",
+                    "nmu": "CANDIDATO 9103",
+                    "vap": 32333,
+                    "sgp": "P91",
+                    "com": ""
+                },
+                {
+                    "seq": 0,
+                    "sqcand": 200007780107,
+                    "n": 3105,
+                    "nm": "CANDIDATO 3105",
+                    "nmu": "CANDIDATO 3105",
+                    "vap": 31822,
+                    "sgp": "P31",
+                    "com": ""
+                },
+                {
+                    "seq": 0,
+                    "sqcand": 200007780938,
+                    "n": 1498,
+                    "nm": "CANDIDATO 1498",
+                    "nmu": "CANDIDATO 1498",
+                    "vap": 31697,
+                    "sgp": "P14",
+                    "com": ""
+                },
+                {
+                    "seq": 0,
+                    "sqcand": 200007780046,
+                    "n": 9102,
+                    "nm": "CANDIDATO 9102",
+                    "nmu": "CANDIDATO 9102",
+                    "vap": 31476,
+                    "sgp": "P91",
+                    "com": ""
+                },
+                {
+                    "seq": 0,
+                    "sqcand": 200007780108,
+                    "n": 3106,
+                    "nm": "CANDIDATO 3106",
+                    "nmu": "CANDIDATO 3106",
+                    "vap": 31249,
+                    "sgp": "P31",
+                    "com": ""
+                },
+                {
+                    "seq": 0,
+                    "sqcand": 200007780948,
+                    "n": 2469,
+                    "nm": "CANDIDATO 2469",
+                    "nmu": "CANDIDATO 2469",
+                    "vap": 31129,
+                    "sgp": "P24",
+                    "com": ""
+                }
+            ]
+        }
+    ]
+}

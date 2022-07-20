@@ -1,0 +1,79 @@
+{
+    "ele": 9577,
+    "cdabr": "BR",
+    "nmabr": "BRASIL",
+    "t": 1,
+    "f": "S",
+    "cdcar": 1,
+    "nmcar": "Presidente",
+    "dg": "08/07/2022",
+    "hg": "13:49:51",
+    "abr": [
+        {
+            "tpabr": "UF",
+            "cdabr": "DF",
+            "nmabr": "DISTRITO FEDERAL",
+            "dt": "",
+            "ht": "",
+            "scv": "N",
+            "tvap": 994954,
+            "cand": [
+                {
+                    "seq": 2,
+                    "sqcand": 280007779438,
+                    "n": 14,
+                    "nm": "CANDIDATO 14",
+                    "nmu": "CANDIDATO 14",
+                    "vap": 172218,
+                    "sgp": "P14",
+                    "com": "",
+                    "vs": []
+                },
+                {
+                    "seq": 1,
+                    "sqcand": 280007778387,
+                    "n": 31,
+                    "nm": "CANDIDATO 31",
+                    "nmu": "CANDIDATO 31",
+                    "vap": 164620,
+                    "sgp": "P31",
+                    "com": "",
+                    "vs": []
+                }
+            ]
+        },
+        {
+            "tpabr": "UF",
+            "cdabr": "RN",
+            "nmabr": "RIO GRANDE DO NORTE",
+            "dt": "",
+            "ht": "",
+            "scv": "N",
+            "tvap": 0,
+            "cand": [
+                {
+                    "seq": 1,
+                    "sqcand": 280007778387,
+                    "n": 31,
+                    "nm": "CANDIDATO 31",
+                    "nmu": "CANDIDATO 31",
+                    "vap": 207731,
+                    "sgp": "P31",
+                    "com": "",
+                    "vs": []
+                },
+                {
+                    "seq": 2,
+                    "sqcand": 280007779438,
+                    "n": 14,
+                    "nm": "CANDIDATO 14",
+                    "nmu": "CANDIDATO 14",
+                    "vap": 192294,
+                    "sgp": "P14",
+                    "com": "",
+                    "vs": []
+                }
+            ]
+        }
+    ]
+}
