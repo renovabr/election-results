@@ -2,6 +2,29 @@ import pandas as pd
 import json
 
 class FilesExploration():
+
+    TP_ELECTIONS = {
+        '1': 'Estadual ordinária',
+        '2': 'Estadual suplementar',
+        '3': 'Municipal ordinária',
+        '4': 'Municipal suplementar',
+        '5': 'Consulta popular nacional',
+        '6': 'Consulta popular estadual',
+        '7': 'Consulta popular municipal',
+        '8': 'Federal ordinária',
+        '9': 'Federal suplementar'
+    } 
+
+    TP_CARGO = {
+        '1': 'Cargos majoritários',
+        '2': 'Cargos proporcionais',
+        '3': 'Pergunta de consulta popular'
+    }
+
+    CD_FASES = {
+        'S': 'Simulado – se o arquivo foi gerado durante o simulado.',
+        'O': 'Oficial – se o arquivo foi gerado com resultados reais da eleição.'
+    } 
     
     def load_json(self, filename: str) -> dict:
         try:
@@ -10,8 +33,14 @@ class FilesExploration():
             return data 
         except Exception as e:
             print(f"Erro em load_json: {e}")
+
     
     def ele_c(self):
+        '''
+            Função que lê e descreve com base na documentação oficial disponível em 
+            https://www.tse.jus.br/++theme++justica_eleitoral/pdfjs/web/viewer.html?file=https://www.tse.jus.br/eleicoes/eleicoes-2022/arquivos/interessados/ea11-arquivo-de-configuracao-de-eleicoes/@@download/file/TSE-EA11-Arquivo-de-configuracao-de-eleicoes.pdf
+            o arquivo ele-c.json
+        '''
         # # # # COMMUN / CONFIG -> ele-c.json
         print('-'*30)
         filepath = 'files/comum/config/'
@@ -19,25 +48,12 @@ class FilesExploration():
         print(filepath + filename)
         print("Esse arquivo contém informações acerca de todas as eleições disponíveis para divulgação. Os arquivos JSONserão consumidos pelo aplicativo Resultados")
         data = self.load_json(filename=filepath+filename)
-            # # # # print(data)
-            # # {'dg': '08/07/2022', 'hg': '13:49:50', 'f': 'S', 'c': 'ele2022', 
-            # 'pl': [{'cd': '8417', 'cdpr': '7296', 'dt': '01/10/2022', 'dtlim': '01/01/2024', 
-            # 'e': [{'cd': '9579', 'cdt2': '9580', 'nm': 'Eleição Ordinária Estadual - 2022 - 8417 1&#186; Turno', 't': '1', 'tp': '1', 
-            # 'abr': [{'cd': 'BR', 'cp': [{'cd': '3', 'ds': 'Governador', 'tp': '1'}, {'cd': '5', 'ds': 'Senador', 'tp': '1'}, 
-            # {'cd': '6', 'ds': 'Deputado Federal', 'tp': '2'}, {'cd': '7', 'ds': 'Deputado Estadual', 'tp': '2'}, 
-            # {'cd': '8', 'ds': 'Deputado Distrital', 'tp': '2'}]}]}, {'cd': '9577', 'cdt2': '9578', 
-            # 'nm': 'Eleição Ordinária Federal - 2022 - 8417 1&#186; Turno', 't': '1', 'tp': '8', '
-            # abr': [{'cd': 'BR', 'cp': [{'cd': '1', 'ds': 'Presidente', 'tp': '1'}]}]}]}]}
         
         print('-'*30)
         print('Atributos raiz \n')
         print("data['dg'] - " + data['dg'] + ' - Data da geração do arquivo')
         print("data['hg'] - " + data['hg'] + ' - Hora da geração do arquivo')
         print("data['f'] - " + data['f'] + ' - Fase em que foi gerado o arquivo.')
-        if data['f'] == 'S':
-            print('\t\t “S”: Simulado – se o arquivo foi gerado durante o simulado.')
-        elif data['f'] == 'O':
-            print('\t\t“O”: Oficial – se o arquivo foi gerado com resultados reais da eleição.')
         print("data['c'] - " + data['c'] + ' - Ciclo eleitoral dos softwares que foram usados para geração do arquivo')
         
         print('-'*30)
@@ -48,10 +64,28 @@ class FilesExploration():
             print("data['pl'][i]['dt'] - " + str(data['pl'][i]['dt']) + ' - Data de ocorrência das eleições do pleito no formato dd/mm/aaaa')
             print("data['pl'][i]['dtlim'] - " + str(data['pl'][i]['dtlim']) + ' - Data limite para a divulgação dos resultados no formato dd/mm/aaaa')
 
-            
-        
-        
+            print('\nSubelemento de pl: "e" (eleição) - Um elemento “abr” para cada UF que participa da eleição.\n')
+            for j in range(0, len(data['pl'][i]['e'])):
+                print("data['pl'][i]['e'][j]['cd'] - " + str(data['pl'][i]['e'][j]['cd']) + ' - Código da eleição')
+                print("data['pl'][i]['e'][j]['cdt2'] - " + str(data['pl'][i]['e'][j]['cdt2']) + ' - Código da eleição para o segundo turno.')
+                print("data['pl'][i]['e'][j]['nm'] - " + str(data['pl'][i]['e'][j]['nm']) + ' - Nome da Eleição')
+                print("data['pl'][i]['e'][j]['t'] - " + str(data['pl'][i]['e'][j]['t']) + ' - Turno da Eleição')
+                print("data['pl'][i]['e'][j]['tp'] - " + str(data['pl'][i]['e'][j]['tp']) + ' - Número identificador do tipo da eleição.')
+                print('Tradução: ' + self.TP_ELECTIONS[data['pl'][i]['e'][j]['tp']])
 
+                print('\nSubelemento de e: "abr" - Abrangência onde ocorrerá a eleição em questão.')
+                for k in range(0, len(data['pl'][i]['e'][j]['abr'])):
+                    print()
+                    print("data['pl'][i]['e'][j]['abr'][k]['cd'] - " + str(data['pl'][i]['e'][j]['abr'][k]['cd']) + ' - Código da abrangência')
+                    for l in range(0, len(data['pl'][i]['e'][j]['abr'][k]['cp'])):
+                        print('\nSubemenento de abr: "cp" -  Elemento: cp (Cargo ou Pergunta)')
+                        print("data['pl'][i]['e'][j]['abr'][k]['cp'][l]['cd'] - " + str(data['pl'][i]['e'][j]['abr'][k]['cp'][l]['cd']) + ' - Código do cargo ou da pergunta.')
+                        print("data['pl'][i]['e'][j]['abr'][k]['cp'][l]['ds'] - " + str(data['pl'][i]['e'][j]['abr'][k]['cp'][l]['ds']) + ' - Descrição do cargo ou da pergunta.')
+                        print("data['pl'][i]['e'][j]['abr'][k]['cp'][l]['tp'] - " + str(data['pl'][i]['e'][j]['abr'][k]['cp'][l]['tp']) + ' - Número identificado do tipo de cargo.')
+                        print("Tradução: " + str(self.TP_CARGO[str(data['pl'][i]['e'][j]['abr'][k]['cp'][l]['tp'])]))
+
+                print('*'*30)
+            
 if __name__ == '__main__':
     obj = FilesExploration()
     obj.ele_c()
