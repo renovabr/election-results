@@ -7,6 +7,7 @@ class Utils():
     BASE_URL = ''
 
     DEFAULT_ELECTION_ID = 9579
+
     PRESIDENTIAL_ELECTION_ID = 9577
 
     TP_ELECTIONS = {
@@ -31,8 +32,12 @@ class Utils():
         'S': 'Simulado – se o arquivo foi gerado durante o simulado.',
         'O': 'Oficial – se o arquivo foi gerado com resultados reais da eleição.'
     } 
+    
+ # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+ # # # # # # # # # # # # # # # # FUNÇÕES UTILITÁRIAS # # # # # # # # # # # # # # # # # # # # # # 
+ # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-    def build_json_municipios(self):
+    def build_json_municipios(self) -> dict:
         '''
             RETORNA UM OBJETO JSON COM OS MUNICIPIOS CARREGADOS
         '''
@@ -40,7 +45,7 @@ class Utils():
         mun = self.load_json(filename=url)
         return mun 
 
-    def get_all_states(self):
+    def get_all_states(self) -> dict:
         '''
             RETORNA DUAS VARIÁVEIS: UM NUMERO INTEIRO COM A QUANTIDADE DE ESTADOS E UMA LISTA CONTENDO TODOS ELES
 
@@ -61,8 +66,7 @@ class Utils():
         print(len(states), states)
         return len(states), states
 
-
-    def get_state_capital(self, acronym: str):
+    def get_state_capital(self, acronym: str) -> dict:
         '''
             RETORNA o nome e o código do municipio no formato 
             {'cd' : '<INT>', 'name' : '<STR>'}
@@ -84,7 +88,6 @@ class Utils():
         print(capital)
         return capital
 
-
     def load_json(self, filename: str) -> dict:
         try:
             file = open(filename)
@@ -93,7 +96,11 @@ class Utils():
         except Exception as e:
             print(f"Erro em load_json: {e}")
 
-    def docs_comum_config_ele_c(self):
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # FUNÇÕES DE DOCUMENTAÇÃO # # # # # # # # # # # # # # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+
+    def docs_comum_config_ele_c(self) -> None:
         '''
             Função que lê e descreve com base na documentação oficial disponível em 
             https://www.tse.jus.br/++theme++justica_eleitoral/pdfjs/web/viewer.html?file=https://www.tse.jus.br/eleicoes/eleicoes-2022/arquivos/interessados/ea11-arquivo-de-configuracao-de-eleicoes/@@download/file/TSE-EA11-Arquivo-de-configuracao-de-eleicoes.pdf
@@ -148,7 +155,7 @@ class Utils():
 
                 print('*'*30)
 
-    def docs_ele_year_electionID_condig_mun_stateId_cm_json(self):
+    def docs_ele_year_electionID_config_mun_stateId_cm_json(self) -> None:
         '''
             Função dedicada para documentar arquivos dentro da pasta ele2022/9579/config, referente as Eleições estaduais ordinárias.
             Tem um único arquivo nessa pasta, o mun-e009579-cm.json, o arquivo de configuração de municípios. 
@@ -197,12 +204,21 @@ class Utils():
                 for k in range(0, len(data['abr'][i]['mu'][j]['z'])):
                     print("data['abr'][i]['mu'][j]['z'][k] - " + data['abr'][i]['mu'][j]['c'] + ' - Indica se o Município é a capital da UF (S) ou não é a capital da UF (N).')
 
-
+    def docs_ele_year_electionID_dados_br(self) -> None:
+        path = 'files/ele2022/' + str(self.DEFAULT_ELECTION_ID) + '/dados/br/'
+        filename = 'br-c0003-e00' + str(self.DEFAULT_ELECTION_ID) + '-e.json'
+        data = self.load_json(filename=path+filename)
+        print(data)
                 
 if __name__ == '__main__':
     obj = Utils()
+    # # # # DOCS
     # obj.docs_comum_config_ele_c()
-    # obj.docs_ele_year_electionID_condig_mun_stateId_cm_json()
+    # obj.docs_ele_year_electionID_config_mun_stateId_cm_json()
+    obj.docs_ele_year_electionID_dados_br()
+    
+    # # # UTILS
     # obj.get_state_capital(acronym='df')
-    obj.get_all_states()
+    # obj.get_all_states()
 
+ 
