@@ -85,7 +85,58 @@ class FilesExploration():
                         print("Tradução: " + str(self.TP_CARGO[str(data['pl'][i]['e'][j]['abr'][k]['cp'][l]['tp'])]))
 
                 print('*'*30)
-            
+
+
+    def state_ordinary_elections_config(self):
+        '''
+            Função dedicada para documentar arquivos dentro da pasta ele2022/9579/config, referente as Eleições estaduais ordinárias.
+            Tem um único arquivo nessa pasta, o mun-e009579-cm.json, o arquivo de configuração de municípios. 
+            A documentação desse arquivo está disponivel no link https://www.tse.jus.br/++theme++justica_eleitoral/pdfjs/web/viewer.html?file=https://www.tse.jus.br/eleicoes/eleicoes-2022/arquivos/interessados/ea12-arquivo-de-configuracao-de-municipios/@@download/file/TSE-EA12-Arquivo-de-configuracao-de-municipios.pdf
+        
+            1. Descrição
+                Esse arquivo contém informações acerca dos municípios das eleições disponíveis para divulgação. 
+                Os arquivos JSON serão consumidos pelo aplicativo Resultados.
+            2. Formato do nome do arquivo
+                O nome do arquivo é formado conforme o padrão a seguir:
+                    mun-e<número da eleição>-cm.json
+                Exemplo: mun-e012345-cm.json
+                Onde:
+                    e<número da eleição>: Número de controle identificador da eleição a que ser refere o arquivo. 
+                Compostopor seis dígitos. É o um número fixo para todos os arquivos de uma mesma eleição.
+
+            TODO: verificar similaridade desse arquivo com o da pasta 9577, que contém os arquivos referentes as eleições federais ordinárias
+
+        '''
+        path = 'files/ele2022/9579/config/'
+        filename = 'mun-e009579-cm.json'
+
+        data = self.load_json(filename=path+filename)
+        print("Atributos raiz: ")
+        print("data['dg'] - " + str(data['dg']) + ' - Data de geração do arquivo')
+        print("data['hg'] - " + str(data['hg']) + ' - Hora de geração do arquivo')
+        print("data['f'] - " + str(data['f']) + ' - Fase em que foi gerado o arquivo')
+        print('Tradução: ' + self.CD_FASES[str(data['f'])])
+        
+        print('-'*30)
+        print('Elemento: abrangência: "abr"')
+        print('Lista com as UF’s - Unidades Federativas - que participam da eleição. Para Exterior, a siglaserá “ZZ”') 
+        print(f'Conteúdo: Contém um elemento “mu” para cada município ou localidade do exterior que faz parte da UF em questão.')
+        for i in range(0, len(data['abr'])):
+            print('\n')
+            print("data['abr'][i]['cd'] - " + data['abr'][i]['cd'] + ' - Sigla da UF em maiúsculo.')
+            print("data['abr'][i]['ds'] - " + data['abr'][i]['ds'] + ' - Nome descritivo da abrangência. Nesse caso, o nome da UF')
+            for j in range(0, len(data['abr'][i]['mu'])):
+                print("data['abr'][i]['mu'][j]['cd'] - " + data['abr'][i]['mu'][j]['cd'] + ' - Número do Município com cinco dígitos, preenchidos com zero à esquerda, de acordo com ocadastro da Justiça Eleitoral')
+                print("data['abr'][i]['mu'][j]['cdi'] - " + data['abr'][i]['mu'][j]['cdi'] + ' - Código identificador do Município com cinco dígitos, preenchidos com zero à esquerda, deacordo com o cadastro IBGE')
+                print("data['abr'][i]['mu'][j]['nm'] - " + data['abr'][i]['mu'][j]['nm'] + ' - Nome do município')
+                print("data['abr'][i]['mu'][j]['c'] - " + data['abr'][i]['mu'][j]['c'] + ' - Indica se o Município é a capital da UF (S) ou não é a capital da UF (N).')
+                
+                
+                
+
+
+
 if __name__ == '__main__':
     obj = FilesExploration()
-    obj.ele_c()
+    #obj.ele_c()
+    obj.state_ordinary_elections_config()
