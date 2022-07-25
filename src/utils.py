@@ -38,10 +38,14 @@ class Utils():
     } 
 
     CD_CARGOS = {
+        1: 'Presidente',
         3: 'Governador',
         5: 'Senador',
         11: 'Prefeito', 
-        6: 'Deputado Federal'
+        6: 'Deputado Federal',
+        7: 'Deputado Estadual',
+        8: 'Deputado Distrital',
+        13: 'Vereador'
     }
     
  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -93,7 +97,8 @@ class Utils():
         if cd_cargo != '*':
             url = self.BASE_URL + self.DEFAULT_URL_CONFIG.format(self.DEFAULT_ELECTION_ID) + abr + '/' + abr + '-c' + str(cd_cargo).zfill(4) + '-e' + str(self.DEFAULT_ELECTION_ID).zfill(6) +  '-e.json'
             obj = self.load_json(url)
-            data.append(obj)
+            if len(obj) is not 0:
+                data.append(obj)
             
         else: 
             for item in self.CD_CARGOS:
@@ -131,25 +136,30 @@ class Utils():
                     abr = st.get('cd').lower()
                     path = self.BASE_URL + self.SIMPLIFICADOS_URL_CONFIG.format(str(self.DEFAULT_ELECTION_ID)) + str(abr) + '/' + str(abr) + '-c' + str(cd_cargo).zfill(4) + '-e' + str(self.DEFAULT_ELECTION_ID).zfill(6) + '-r.json'
                     data = self.load_json(path)
-                    datalist.append(data)
+                    if len(data) is not 0:
+                        datalist.append(data)
             else:
                 path = self.BASE_URL + self.SIMPLIFICADOS_URL_CONFIG.format(str(self.DEFAULT_ELECTION_ID)) + str(abr) + '/' + str(abr) + '-c' + str(cd_cargo).zfill(4) + '-e' + str(self.DEFAULT_ELECTION_ID).zfill(6) + '-r.json'
                 data = self.load_json(path)
-                datalist.append(data)
+                if len(data) is not 0:
+                    datalist.append(data)
         else:
             for cargo in self.CD_CARGOS:
-                if abr == 'br':
+                if abr.lower() == 'br':
                     states = self.get_all_states()
                     for st in states:
-                        abr = st.get('cd').lower()
-                        path = self.BASE_URL + self.SIMPLIFICADOS_URL_CONFIG.format(str(self.DEFAULT_ELECTION_ID)) + str(abr) + '/' + str(abr) + '-c' + str(cd_cargo).zfill(4) + '-e' + str(self.DEFAULT_ELECTION_ID).zfill(6) + '-r.json'
+                        br_abr = st.get('cd').lower()
+                        path = self.BASE_URL + self.SIMPLIFICADOS_URL_CONFIG.format(str(self.DEFAULT_ELECTION_ID)) + str(br_abr) + '/' + str(br_abr) + '-c' + str(cargo).zfill(4) + '-e' + str(self.DEFAULT_ELECTION_ID).zfill(6) + '-r.json'
                         data = self.load_json(path)
-                        datalist.append(data)
+                        if len(data) is not 0:
+                            data['cargo'] = self.CD_CARGOS[int(cargo)]
+                            datalist.append(data)
                 else:
                     path = self.BASE_URL + self.SIMPLIFICADOS_URL_CONFIG.format(str(self.DEFAULT_ELECTION_ID)) + str(abr) + '/' + str(abr) + '-c' + str(cargo).zfill(4) + '-e' + str(self.DEFAULT_ELECTION_ID).zfill(6) + '-r.json'
                     data = self.load_json(path)
-                    datalist.append(data)
-        return data
+                    if len(data) is not 0:
+                        datalist.append(data)
+        return datalist
 
     def get_all_states(self) -> dict:
         '''
@@ -253,6 +263,31 @@ class Utils():
                 lista.append(infos)
         return lista
 
+    def get_situacao_candidato(self, sqcand: int) -> dict: 
+        data = self.build_dados_simplificados(abr='br', cd_cargo='*')
+        for dataset in data:
+            infos = {}
+            infos['estado'] = dataset.get('cdabr')
+            infos['cargo'] = dataset.get('cargo')
+            infos['num_vagas_disputadas'] = dataset.get('v')
+            infos['percentual_secoes_totalizadas'] = dataset.get("pst")
+            infos['percentual_comparecimento'] = dataset.get("pc")
+            infos['percentual_abstencias'] = dataset.get("pa")
+            infos['percentual_votos_brancos'] = dataset.get("pvb")
+            infos['percentual_votos_nulos'] = dataset.get("pvn")
+            infos['percentual_votos_anulados'] = dataset.get("pvan")
+            for cand in dataset.get('cand'):
+                infos['numero'] = cand.get('n')
+                infos['sqcand'] = cand.get('sqcand')
+                infos['nome_de_urna'] = cand.get('nm')
+                infos['destinação_de_votos'] = cand.get('dvt')
+                infos['resultado'] = cand.get('st')
+                infos['votos_computados'] = cand.get('vap')
+                infos['percentual_votos'] = cand.get("pvap")
+                infos['eleito'] = cand.get('e')
+
+                if cand.get('sqcand') == sqcand:
+                    return infos
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # FUNÇÕES DE DOCUMENTAÇÃO # # # # # # # # # # # # # # # # # # # #
@@ -432,10 +467,11 @@ if __name__ == '__main__':
     # obj.get_todos_eleitos()
     # obj.build_totalizacao(abr='df')
     # obj.get_infos_totalizacao(sigla='br')
-    print(obj.build_dados_simplificados(abr='df', cd_cargo='*'))
+    # print(obj.build_dados_simplificados(abr='df', cd_cargo='*'))
+    print(obj.get_situacao_candidato(sqcand=70007787505))
 
     
-    # a = obj.check_eleito(sqcand=2007780948)
-    # print(a)
+    a = obj.check_eleito(sqcand=70007787505)
+    print(a)
 
  
