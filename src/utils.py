@@ -113,7 +113,7 @@ class Utils():
         '''
             Retorna uma lista contendo informaçõeschaves sobre o estado
 
-            <INT>, {'cd' : '<STR>', 'name' : '<STR>', 'capital_name': <STR>, 'capital_cd': <INT>, 'count_mun': <INT>,}
+            <INT>, {'cd' : '<STR>', 'nome' : '<STR>', 'capital_nome': <STR>, 'capital_cd': <INT>, 'count_mun': <INT>,}
 
         '''
         states = [] 
@@ -122,17 +122,17 @@ class Utils():
             state = {} 
             state['cd'] = mun['abr'][i]['cd']
             state['ds'] = mun['abr'][i]['ds']
-            capital_data = self.get_state_capital(acronym=state['cd'])
-            state['capital_name'] = capital_data['name']
+            capital_data = self.get_state_capital(sigla=state['cd'])
+            state['capital_nome'] = capital_data['nome']
             state['capital_cd'] = capital_data['cd']
             states.append(state)
 
         return states
 
-    def get_state_capital(self, acronym: str) -> dict:
+    def get_state_capital(self, sigla: str) -> dict:
         '''
             RETORNA o nome e o código do municipio no formato 
-            {'cd' : '<INT>', 'name' : '<STR>'}
+            {'cd' : '<INT>', 'nome' : '<STR>'}
             RECEBE o atributo state, uma string de 2 digitos com a sigla do estado
 
         '''
@@ -140,13 +140,13 @@ class Utils():
         capital = {}
         mun = self.build_json_municipios()
 
-        # FIND ACRONYM:
+        # FIND sigla:
         for i in range(0, len(mun['abr'])):
-           if mun['abr'][i]['cd'] == acronym.upper():
+           if mun['abr'][i]['cd'] == sigla.upper():
                 for j in range(0, len(mun['abr'][i]['mu'])):
                     if mun['abr'][i]['mu'][j]['c'] == 'S':
                         capital['cd'] = mun['abr'][i]['mu'][j]['cdi']
-                        capital['name'] = mun['abr'][i]['mu'][j]['nm']
+                        capital['nome'] = mun['abr'][i]['mu'][j]['nm']
 
         return capital
 
@@ -181,10 +181,10 @@ class Utils():
                 return True
         return False 
 
-    def get_infos_totalizacao(self, acronym: str) -> list: 
+    def get_infos_totalizacao(self, sigla: str) -> list: 
         '''
             Retorna informações facilitadas sobre a totaliazação de uma abrancência
-            recebe 'br' como acronym se for retornar informações sobre todo o brasil 
+            recebe 'br' como sigla se for retornar informações sobre todo o brasil 
             ou então recebe a sigla do estado alvo
             
         ''' 
@@ -205,8 +205,8 @@ class Utils():
             infos['percentual_seções_totalizadas'] = abr.get("pst")
             infos['percentual_comparecimento'] = abr.get('pc')
             infos['percentual_abstenções'] = abr.get('pa')
-            if acronym != 'br':
-                if infos['estado'] == acronym.upper():
+            if sigla != 'br':
+                if infos['estado'] == sigla.upper():
                     lista.append(infos)
             else:
                 lista.append(infos)
@@ -388,12 +388,12 @@ if __name__ == '__main__':
     
     
     # # # UTILS
-    # obj.get_state_capital(acronym='df')
+    # obj.get_state_capital(sigla='df')
     # obj.get_all_states()
     # obj.build_resultado_de_eleitos('*', 'BR')
     # obj.get_todos_eleitos()
     # obj.build_info_totalizacao(abr='df')
-    # obj.get_infos_totalizacao(acronym='br')
+    # obj.get_infos_totalizacao(sigla='br')
 
     
     # a = obj.check_eleito(sqcand=2007780948)
