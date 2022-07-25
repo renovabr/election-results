@@ -9,6 +9,7 @@ class Utils():
     BASE_URL = 'files/'
     
     DEFAULT_URL_CONFIG = 'ele2022/{}/dados/'
+    SIMPLIFICADOS_URL_CONFIG = 'ele2022/{}/dados-simplificados/'
     DEFAULT_ELECTION_ID = 9579
 
     PRESIDENTIAL_ELECTION_ID = 9577
@@ -55,7 +56,7 @@ class Utils():
             data = {}
         return data 
 
-    def build_json_municipios(self) -> json:
+    def build_municipios(self) -> json:
         '''
             RETORNA UM OBJETO JSON COM OS MUNICIPIOS CARREGADOS
             
@@ -83,7 +84,7 @@ class Utils():
             para retornar de todos os cargos
             
             abr: SIGLA da abrangência. 'BR' para brasil
-            EM CADA ITEM DA LISTA VÃO TER TODOS OS ELEITOS E DADOS DE VICE/SUPLENTE P AQUELE CARGO
+            CADA ITEM DA LISTA CONTÉM TODOS OS ELEITOS E DADOS DE VICE/SUPLENTE P AQUELE ->CARGO<-
         '''
         data = []
 
@@ -103,11 +104,52 @@ class Utils():
             
         return data 
 
-    def build_info_totalizacao(self, abr: str) -> list:
+    def build_totalizacao(self, abr: str) -> list:
+        '''
+            Constrói o arquivo 
+            EA15 – Arquivo de acompanhamento UF
+            Documentação completa disponível em https://www.tse.jus.br/++theme++justica_eleitoral/pdfjs/web/viewer.html?file=https://www.tse.jus.br/eleicoes/eleicoes-2022/arquivos/interessados/ea15-arquivo-de-acompanhamento-uf-1653934878111/@@download/file/TSE-EA15-Arquivo-de-acompanhamento-UF.pdf
+        '''
+        
         abr = abr.lower() 
         url = self.BASE_URL + self.DEFAULT_URL_CONFIG.format(self.DEFAULT_ELECTION_ID) + str(abr) + '/' + str(abr) + '-e' + str(self.DEFAULT_ELECTION_ID).zfill(6) + '-ab.json'
         data = self.load_json(url)
         return data 
+
+    def build_dados_simplificados(self, abr: str, cd_cargo) -> list:
+        '''
+            EA04 – Arquivo de resultado consolidado
+            Documentação completa disponível em:
+            https://www.tse.jus.br/++theme++justica_eleitoral/pdfjs/web/viewer.html?file=https://www.tse.jus.br/eleicoes/eleicoes-2022/arquivos/interessados/ea04-arquivo-de-resultado-consolidado/@@download/file/TSE-EA04-Arquivo-de-resultado-consolidado.pdf
+        '''
+        datalist = []
+        abr = abr.lower()
+        if cd_cargo != '*':
+            if abr == 'br':
+                states = self.get_all_states()
+                for st in states:
+                    abr = st.get('cd').lower()
+                    path = self.BASE_URL + self.SIMPLIFICADOS_URL_CONFIG.format(str(self.DEFAULT_ELECTION_ID)) + str(abr) + '/' + str(abr) + '-c' + str(cd_cargo).zfill(4) + '-e' + str(self.DEFAULT_ELECTION_ID).zfill(6) + '-r.json'
+                    data = self.load_json(path)
+                    datalist.append(data)
+            else:
+                path = self.BASE_URL + self.SIMPLIFICADOS_URL_CONFIG.format(str(self.DEFAULT_ELECTION_ID)) + str(abr) + '/' + str(abr) + '-c' + str(cd_cargo).zfill(4) + '-e' + str(self.DEFAULT_ELECTION_ID).zfill(6) + '-r.json'
+                data = self.load_json(path)
+                datalist.append(data)
+        else:
+            for cargo in self.CD_CARGOS:
+                if abr == 'br':
+                    states = self.get_all_states()
+                    for st in states:
+                        abr = st.get('cd').lower()
+                        path = self.BASE_URL + self.SIMPLIFICADOS_URL_CONFIG.format(str(self.DEFAULT_ELECTION_ID)) + str(abr) + '/' + str(abr) + '-c' + str(cd_cargo).zfill(4) + '-e' + str(self.DEFAULT_ELECTION_ID).zfill(6) + '-r.json'
+                        data = self.load_json(path)
+                        datalist.append(data)
+                else:
+                    path = self.BASE_URL + self.SIMPLIFICADOS_URL_CONFIG.format(str(self.DEFAULT_ELECTION_ID)) + str(abr) + '/' + str(abr) + '-c' + str(cargo).zfill(4) + '-e' + str(self.DEFAULT_ELECTION_ID).zfill(6) + '-r.json'
+                    data = self.load_json(path)
+                    datalist.append(data)
+        return data
 
     def get_all_states(self) -> dict:
         '''
@@ -117,7 +159,7 @@ class Utils():
 
         '''
         states = [] 
-        mun = self.build_json_municipios()
+        mun = self.build_municipios()
         for i in range(0, len(mun['abr'])):
             state = {} 
             state['cd'] = mun['abr'][i]['cd']
@@ -138,7 +180,7 @@ class Utils():
         '''
         # build URL 
         capital = {}
-        mun = self.build_json_municipios()
+        mun = self.build_municipios()
 
         # FIND sigla:
         for i in range(0, len(mun['abr'])):
@@ -186,9 +228,8 @@ class Utils():
             Retorna informações facilitadas sobre a totaliazação de uma abrancência
             recebe 'br' como sigla se for retornar informações sobre todo o brasil 
             ou então recebe a sigla do estado alvo
-            
         ''' 
-        data = self.build_info_totalizacao(abr='br')
+        data = self.build_totalizacao(abr='br')
         lista = [] 
         
         for abr in data.get('abr'):
@@ -211,9 +252,6 @@ class Utils():
             else:
                 lista.append(infos)
         return lista
-
-
-
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -389,11 +427,12 @@ if __name__ == '__main__':
     
     # # # UTILS
     # obj.get_state_capital(sigla='df')
-    # obj.get_all_states()
+    # print(obj.get_all_states())
     # obj.build_resultado_de_eleitos('*', 'BR')
     # obj.get_todos_eleitos()
-    # obj.build_info_totalizacao(abr='df')
+    # obj.build_totalizacao(abr='df')
     # obj.get_infos_totalizacao(sigla='br')
+    print(obj.build_dados_simplificados(abr='df', cd_cargo='*'))
 
     
     # a = obj.check_eleito(sqcand=2007780948)
