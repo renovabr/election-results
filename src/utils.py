@@ -1,5 +1,6 @@
-import pandas as pd 
+from functools import total_ordering
 import json
+from xmlrpc.client import boolean
 
 
 class Utils():
@@ -45,29 +46,42 @@ class Utils():
  # # # # # # # # # # # # # # # # FUNÇÕES UTILITÁRIAS # # # # # # # # # # # # # # # # # # # # # # 
  # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-    def load_json(self, filename: str) -> dict:
+    def load_json(self, filename: str) -> json:
         try:
             file = open(filename)
             data = json.load(file)
-            return data 
-        except Exception as e:
-            print(f"Erro em load_json: {e}")
+        except:
+            data = {}
+        return data 
 
-    def build_json_municipios(self) -> dict:
+        
+    def build_json_municipios(self) -> json:
         '''
             RETORNA UM OBJETO JSON COM OS MUNICIPIOS CARREGADOS
+            
+            EA12 – Arquivo de configuração de municípios
+            e<número da eleição>: Número de controle identificador da eleição a que ser refere o arquivo. 
+            Compostopor seis dígitos. É o um número fixo para todos os arquivos de uma mesma eleição
+    
         '''
-        url = self.BASE_URL + 'ele2022/' + str(self.DEFAULT_ELECTION_ID) + '/config/mun-e00' + str(self.DEFAULT_ELECTION_ID) + '-cm.json'
+        url = self.BASE_URL + 'ele2022/' + str(self.DEFAULT_ELECTION_ID) + '/config/mun-e' + str(self.DEFAULT_ELECTION_ID).zfill(6) + '-cm.json'
         mun = self.load_json(filename=url)
         return mun 
 
-    def build_resultado_de_eleitos(self, cd_cargo: int, abr: str) -> dict:
+    def build_resultado_de_eleitos(self, cd_cargo, abr: str) -> list:
         '''
             <br|uf>-c<código do cargo>-e<número da eleição>-e.json
 
+            EA10 – Arquivo de resultado de eleitos
+            Documentação disponível em: 
+            https://www.tse.jus.br/++theme++justica_eleitoral/pdfjs/web/viewer.html?file=https://www.tse.jus.br/eleicoes/eleicoes-2022/arquivos/interessados/ea10-arquivo-de-resultado-de-eleitos/@@download/file/TSE-EA10-Arquivo-de-resultado-de-eleitos.pdf
+        
+
             RETORNA UMA LISTA COM OBJETOS JSON COM O ARQUIVO DOS ELEITOS PRO CARGO DE ACORDO COM O CODIGO DO CARGO
+            
             cd_cargo: num inteiro com o codigo do cargo a ser retornado ou então um asterisco '*'
             para retornar de todos os cargos
+            
             abr: SIGLA da abrangência. 'BR' para brasil
             EM CADA ITEM DA LISTA VÃO TER TODOS OS ELEITOS E DADOS DE VICE/SUPLENTE P AQUELE CARGO
         '''
@@ -84,7 +98,8 @@ class Utils():
             for item in self.CD_CARGOS:
                 url = self.BASE_URL + self.DEFAULT_URL_CONFIG.format(self.DEFAULT_ELECTION_ID) + abr + '/' + abr + '-c' + str(item).zfill(4) + '-e' + str(self.DEFAULT_ELECTION_ID).zfill(6) + '-e.json'
                 obj = self.load_json(url)
-                data.append(obj)
+                if len(obj) is not 0:
+                    data.append(obj)
             
         return data 
 
@@ -130,6 +145,31 @@ class Utils():
 
         print(capital)
         return capital
+
+    def get_todos_eleitos(self, vices = False) -> list:
+        data = self.build_resultado_de_eleitos(cd_cargo='*', abr='br')
+        todos_eleitos = [] 
+        if not vices:
+            for item in data:
+                eleito = {} 
+                eleito['cargo'] = item.get('nmcar')
+                for abr in item.get("abr"):
+                    eleito['estado'] = abr.get('cdabr')
+                    eleito['total_votos_estado'] = abr.get('tvap')
+                    for cand in abr.get("cand"):
+                        eleito['nome'] = cand.get('nm')
+                        eleito['sqcand'] = cand.get('sqcand')
+                        eleito['partido'] = cand.get("sgp")
+                        eleito['votos'] = cand.get('vap')
+                        eleito['numero_urna'] = cand.get('n')
+                        eleito['nome_de_urna'] = cand.get('nmu')
+                        todos_eleitos.append(eleito)      
+        return todos_eleitos
+
+    def check_eleito(self, sqcand: int) -> bool:
+        pass
+
+
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # # # # # # # # # # # # # # # # FUNÇÕES DE DOCUMENTAÇÃO # # # # # # # # # # # # # # # # # # # #
@@ -321,9 +361,11 @@ if __name__ == '__main__':
     # obj.docs_ele_year_electionID_config_mun_stateId_cm_json()
     # obj.docs_ele_year_electionID_dados_br()
     
+    
     # # # UTILS
     # obj.get_state_capital(acronym='df')
     # obj.get_all_states()
     # obj.build_resultado_de_eleitos('*', 'BR')
+    obj.get_todos_eleitos()
 
  
