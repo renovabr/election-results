@@ -147,6 +147,9 @@ class Utils():
         return capital
 
     def get_todos_eleitos(self, vices = False) -> list:
+        '''
+            Retorna uma lista com informações críticas e facilitadas sobre todos os eleitos, em todos os cargos do brasil
+        '''
         data = self.build_resultado_de_eleitos(cd_cargo='*', abr='br')
         todos_eleitos = [] 
         if not vices:
@@ -167,8 +170,11 @@ class Utils():
         return todos_eleitos
 
     def check_eleito(self, sqcand: int) -> bool:
-        pass
-
+        todos_eleitos = self.get_todos_eleitos() 
+        for eleito in todos_eleitos:
+            if eleito.get('sqcand') == sqcand:
+                return True
+        return False 
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -332,27 +338,6 @@ class Utils():
                     print("data['abr'][i]['cand'][j]['vs'][k]['nmu'] - " + str(data['abr'][i]['cand'][j]['vs'][k]['nmu'])  + " - Nome de urna ")
                     print("data['abr'][i]['cand'][j]['vs'][k]['tp'] - " + str(data['abr'][i]['cand'][j]['vs'][k]['tp'])  + " - V ou S: Vice ou suplente ")
                     print("data['abr'][i]['cand'][j]['vs'][k]['sgp'] - " + str(data['abr'][i]['cand'][j]['vs'][k]['sgp'])  + " - sigla do partido ")
-
-
-                    
-
-
-
-
-
-
-
-
-
-
-
-            
-        
-
-
-
-
-
                 
 if __name__ == '__main__':
     obj = Utils()
@@ -366,6 +351,9 @@ if __name__ == '__main__':
     # obj.get_state_capital(acronym='df')
     # obj.get_all_states()
     # obj.build_resultado_de_eleitos('*', 'BR')
-    obj.get_todos_eleitos()
+    # obj.get_todos_eleitos()
+    
+    # a = obj.check_eleito(sqcand=2007780948)
+    # print(a)
 
  
