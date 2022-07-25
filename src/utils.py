@@ -1,3 +1,4 @@
+from distutils.log import info
 from functools import total_ordering
 import json
 from xmlrpc.client import boolean
@@ -54,7 +55,6 @@ class Utils():
             data = {}
         return data 
 
-        
     def build_json_municipios(self) -> json:
         '''
             RETORNA UM OBJETO JSON COM OS MUNICIPIOS CARREGADOS
@@ -103,9 +103,15 @@ class Utils():
             
         return data 
 
+    def build_info_totalizacao(self, abr: str) -> list:
+        abr = abr.lower() 
+        url = self.BASE_URL + self.DEFAULT_URL_CONFIG.format(self.DEFAULT_ELECTION_ID) + str(abr) + '/' + str(abr) + '-e' + str(self.DEFAULT_ELECTION_ID).zfill(6) + '-ab.json'
+        data = self.load_json(url)
+        return data 
+
     def get_all_states(self) -> dict:
         '''
-            RETORNA DUAS VARIÁVEIS: UM NUMERO INTEIRO COM A QUANTIDADE DE ESTADOS E UMA LISTA CONTENDO TODOS ELES
+            Retorna uma lista contendo informaçõeschaves sobre o estado
 
             <INT>, {'cd' : '<STR>', 'name' : '<STR>', 'capital_name': <STR>, 'capital_cd': <INT>, 'count_mun': <INT>,}
 
@@ -121,8 +127,7 @@ class Utils():
             state['capital_cd'] = capital_data['cd']
             states.append(state)
 
-        print(len(states), states)
-        return len(states), states
+        return states
 
     def get_state_capital(self, acronym: str) -> dict:
         '''
@@ -143,12 +148,12 @@ class Utils():
                         capital['cd'] = mun['abr'][i]['mu'][j]['cdi']
                         capital['name'] = mun['abr'][i]['mu'][j]['nm']
 
-        print(capital)
         return capital
 
     def get_todos_eleitos(self, vices = False) -> list:
         '''
             Retorna uma lista com informações críticas e facilitadas sobre todos os eleitos, em todos os cargos do brasil
+            TODO: fazer a vice = True
         '''
         data = self.build_resultado_de_eleitos(cd_cargo='*', abr='br')
         todos_eleitos = [] 
@@ -175,6 +180,40 @@ class Utils():
             if eleito.get('sqcand') == sqcand:
                 return True
         return False 
+
+    def get_infos_totalizacao(self, acronym: str) -> list: 
+        '''
+            Retorna informações facilitadas sobre a totaliazação de uma abrancência
+            recebe 'br' como acronym se for retornar informações sobre todo o brasil 
+            ou então recebe a sigla do estado alvo
+            
+        ''' 
+        data = self.build_info_totalizacao(abr='br')
+        lista = [] 
+        
+        for abr in data.get('abr'):
+            infos = {} 
+            infos['estado'] = abr.get('cdabr')
+            infos['dg'] = data.get('dg')
+            infos['hg'] = data.get('hg')
+            if abr.get('and') == 'N':
+                infos['andamento'] = '#'
+            elif abr.get('and') == 'P':
+                infos['andamento'] = 'Iniciada'
+            elif abr.get('and') == 'F':
+                infos['andamento'] = 'Finalizada'
+            infos['percentual_seções_totalizadas'] = abr.get("pst")
+            infos['percentual_comparecimento'] = abr.get('pc')
+            infos['percentual_abstenções'] = abr.get('pa')
+            if acronym != 'br':
+                if infos['estado'] == acronym.upper():
+                    lista.append(infos)
+            else:
+                lista.append(infos)
+        return lista
+
+
+
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -338,7 +377,8 @@ class Utils():
                     print("data['abr'][i]['cand'][j]['vs'][k]['nmu'] - " + str(data['abr'][i]['cand'][j]['vs'][k]['nmu'])  + " - Nome de urna ")
                     print("data['abr'][i]['cand'][j]['vs'][k]['tp'] - " + str(data['abr'][i]['cand'][j]['vs'][k]['tp'])  + " - V ou S: Vice ou suplente ")
                     print("data['abr'][i]['cand'][j]['vs'][k]['sgp'] - " + str(data['abr'][i]['cand'][j]['vs'][k]['sgp'])  + " - sigla do partido ")
-                
+
+
 if __name__ == '__main__':
     obj = Utils()
     # # # # DOCS
@@ -352,6 +392,9 @@ if __name__ == '__main__':
     # obj.get_all_states()
     # obj.build_resultado_de_eleitos('*', 'BR')
     # obj.get_todos_eleitos()
+    # obj.build_info_totalizacao(abr='df')
+    # obj.get_infos_totalizacao(acronym='br')
+
     
     # a = obj.check_eleito(sqcand=2007780948)
     # print(a)
