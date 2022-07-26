@@ -1,17 +1,13 @@
-from distutils.log import info
-from functools import total_ordering
 import json
-from xmlrpc.client import boolean
+
 
 
 class Utils():
 
     BASE_URL = 'files/'
-    
     DEFAULT_URL_CONFIG = 'ele2022/{}/dados/'
     SIMPLIFICADOS_URL_CONFIG = 'ele2022/{}/dados-simplificados/'
     DEFAULT_ELECTION_ID = 9579
-
     PRESIDENTIAL_ELECTION_ID = 9577
 
     TP_ELECTIONS = {
@@ -264,11 +260,16 @@ class Utils():
         return lista
 
     def get_situacao_candidato(self, sqcand: int) -> dict: 
+        '''
+            Retorna um dicionário contendo informações compiladas com nome, votos partido e resultado do candidato, bem como percentuais
+            de votação naquele estado.
+        '''
         data = self.build_dados_simplificados(abr='br', cd_cargo='*')
         for dataset in data:
             infos = {}
             infos['estado'] = dataset.get('cdabr')
             infos['cargo'] = dataset.get('cargo')
+            infos['status_totalização'] = self.get_infos_totalizacao(sigla=infos['estado'])[0].get('andamento')
             infos['num_vagas_disputadas'] = dataset.get('v')
             infos['percentual_secoes_totalizadas'] = dataset.get("pst")
             infos['percentual_comparecimento'] = dataset.get("pc")
@@ -468,10 +469,10 @@ if __name__ == '__main__':
     # obj.build_totalizacao(abr='df')
     # obj.get_infos_totalizacao(sigla='br')
     # print(obj.build_dados_simplificados(abr='df', cd_cargo='*'))
-    print(obj.get_situacao_candidato(sqcand=70007787505))
+    # print(obj.get_situacao_candidato(sqcand=70007787505))
 
     
-    a = obj.check_eleito(sqcand=70007787505)
-    print(a)
+    # a = obj.check_eleito(sqcand=70007787505)
+    # print(a)
 
  
