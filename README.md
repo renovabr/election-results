@@ -1,7 +1,10 @@
 # Resultado das Eleições 2022 
 Módulo com funções úteis na construção de aplicações para consumo de dados de resultados de eleições.
 
-Projeto pensado como um módulo de funções a serem importadas como auxiliares em aplicações 
+* [Canal oficial](https://www.tse.jus.br/eleicoes/eleicoes-2022/interessados-na-divulgacao-de-resultados-2022) de comunicação do TSE com interessados em divulgar as eleições 2022 
+* [Documentos - Documentação completa](https://www.tse.jus.br/eleicoes/eleicoes-2022/interessados-na-divulgacao-de-resultados-2022) 
+ 
+Projeto pensado como um módulo de funções a serem importadas como auxiliares em aplicações, como construção de URLs e concatenação de dados nacionais. 
 
 Possui também algumas funções descritivas sobre o conteúdo das aplicações, funções estas iniciadas porm `def docs_*():`
 
@@ -39,11 +42,7 @@ Funções
 
 # Questões
 * EA10 – Arquivo de resultado de eleitos 
-
-Arquivo com resultado apenas se consolidado, após a totalização?
-
 * EA04 – Arquivo de resultado consolidado
 
-Arquivos simplificados - Atualizados com frequência ou só divulgados no fim da totalização?
-
+Quais os momentos de atualização em cada um deles? apenas existem após a totalização? Existem vazios durante a totalização? São preenchidos por informações parciais?
 
